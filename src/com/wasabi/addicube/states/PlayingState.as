@@ -363,6 +363,10 @@
 			var oneThird : int;
 			
 			remaining = this.foodNeeded - this.foodPoofs.countLiving();
+			
+			//	Account for the initial cube not starting at a small size
+			remaining -= (Cube.FOOD_TO_SPLIT - 3);
+			
 			oneThird = FlxU.ceil(remaining / 3);
 			colorCount = new Array();
 			
