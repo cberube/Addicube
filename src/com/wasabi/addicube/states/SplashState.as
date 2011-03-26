@@ -144,10 +144,12 @@ package com.wasabi.addicube.states
 			for (i = 0; i < this.defaultGroup.members.length; i++)
 			{
 				s = this.defaultGroup.members[i] as FadeSprite;
+				if (s != null && s.hasBeenClicked) continue;
 				
 				if (s != null && s.exists && s.alpha > 0 && s.url != null)
 				{
 					navigateToURL(new URLRequest(s.url))
+					s.hasBeenClicked = true;
 				}
 			}
 		}

@@ -267,6 +267,20 @@
 				}
 			}
 			
+			if (
+				this.targetFoodPoof == null &&
+				(
+					this.currentState == CubeState.EATING_START ||
+					this.currentState == CubeState.EATING_HOOVER ||
+					this.currentState == CubeState.EATING_CHEW
+				)
+			)
+			{
+				FlxG.log("Idle because of food poof loss");
+				this.currentState = CubeState.IDLE;
+				this.switchAnimation("Idle");
+			}
+			
 			switch (this.currentState)
 			{
 				case CubeState.AVOIDING_OTHERS:
@@ -304,20 +318,7 @@
 					break;
 				default:
 			}
-			
-			if (
-				this.targetFoodPoof == null &&
-				(
-					this.currentState == CubeState.EATING_START ||
-					this.currentState == CubeState.EATING_HOOVER ||
-					this.currentState == CubeState.EATING_CHEW
-				)
-			)
-			{
-				FlxG.log("Idle because of food poof loss");
-				this.currentState = CubeState.IDLE;
-			}
-			
+						
 			this.updateDebug();
 			
 			if (this.currentState == CubeState.MOVING && !PlayingState.instance.isPointInsideDish(this.center.x, this.center.y))
@@ -527,12 +528,16 @@
 		
 		public function relinquishFood() : void
 		{
+			FlxG.log("Relinquishing food: " + this.targetFoodPoof);
+			
 			if (this.targetFoodPoof != null)
 			{
-				this.currentState = CubeState.IDLE;
+				//this.currentState = CubeState.IDLE;
+				this.play("Idle");
 				this.targetFoodPoof.visible = true;
 				this.targetFoodPoof.ownerCube = null;
 				this.targetFoodPoof = null;
+				FlxG.log("Cube done relinquishing");
 			}
 		}
 		
@@ -998,6 +1003,11 @@
 			{
 				this.setDisposition(Disposition.BALANCED);
 			}
+			
+			//	Reset food balance counters after growth
+			this.foodConsumed[Disposition.BLUE] = 0;
+			this.foodConsumed[Disposition.RED] = 0;
+			this.foodConsumed[Disposition.GREEN] = 0;
 		}
 		
 		public function addConsumedFood(color : int, amount : int = 1) : void
@@ -1094,7 +1104,7 @@
 			{
 				poof = group.members[i] as FoodPoof;
 				
-				if (!poof.exists || poof.ownerCube != null) continue;
+				if (!poof.isReady || poof.ownerCube != null) continue;
 				
 				if (this.bodyCollider.overlaps(poof))
 				{

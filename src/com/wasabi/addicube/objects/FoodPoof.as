@@ -52,11 +52,19 @@
 		private var driftClock : Number;
 		private var driftScale : Number;
 		
+		private var delayClock : Number;
+		private var growthClock : Number;
+		private var growthTime : Number;
+		
 		public function FoodPoof() 
 		{
 			this.addAnimation("Grow", [ 0 ]);
 			this.addAnimation("Exist", [ 0 ]);
 			this.addAnimation("Decay", [ 0 ]);
+			
+			this.delayClock = 0;
+			this.growthClock = 0;
+			this.growthTime = 0.65;
 		}
 		
 		override public function kill():void 
@@ -98,7 +106,7 @@
 			this.basePosition.y += dy;
 		}
 		
-		public function spawn(x : int, y : int, colorId : int = -1) : void
+		public function spawn(x : int, y : int, colorId : int = -1, delay : Number = 0) : void
 		{
 			if (this.ownerCube != null)
 			{
@@ -126,7 +134,16 @@
 			else if (which <= 0.66) this.loadGraphic(FoodPoof.GFX_POOF_2);
 			else this.loadGraphic(FoodPoof.GFX_POOF_3);
 			
-			this.play("Grow");
+			this.delayClock = delay;
+			this.visible = false;
+			this.scale.x = this.scale.y = 0;
+			
+			if (this.delayClock == 0)
+			{
+				this.play("Grow");
+				this.visible = true;
+				this.growthClock = 0;
+			}
 			
 			this.ownerCube = null;
 		}
@@ -136,6 +153,27 @@
 			super.update();
 			
 			var o : Number;
+			
+			if (this.delayClock > 0)
+			{
+				this.delayClock -= FlxG.elapsed;
+				if (this.delayClock <= 0)
+				{
+					this.play("Grow");
+					this.visible = true;
+				}
+				else
+				{
+					return;
+				}
+			}
+			
+			if (this.growthClock < this.growthTime)
+			{
+				this.growthClock += FlxG.elapsed;
+				this.scale.x = this.scale.y = (this.growthClock / this.growthTime);
+				return;
+			}
 			
 			if (this._curAnim.name == "Grow" && this.finished)
 			{
@@ -153,6 +191,20 @@
 				this.y = this.basePosition.y + o - this.height / 2;
 			}
 			
+		}
+		
+		public function get isReady() : Boolean
+		{
+			if (
+				this.visible &&
+				this.exists &&
+				this.delayClock <= 0 &&
+				this.growthClock >= this.growthTime
+			)
+			{
+				return true;
+			}
+			return false;
 		}
 	}
 	

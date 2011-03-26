@@ -238,7 +238,7 @@
 			this.tweezerChain = null;
 			this.tweezerChainOffset = new FlxPoint();
 			
-			this.toolbar.disableButton(Toolbar.BUTTON_PIPETTE);
+			//this.toolbar.disableButton(Toolbar.BUTTON_PIPETTE);
 			this.toolbar.disableButton(Toolbar.BUTTON_SCALPEL);
 			this.toolbar.disableButton(Toolbar.BUTTON_TWEEZERS);
 		}
@@ -604,7 +604,7 @@
 						this.spawnFoodPoof();
 					}
 					
-					this.foodClock = FlxU.random() * 2.0 + 0.5;
+					this.foodClock = FlxU.random() * 0.75 + 1.25;
 				}
 			}
 			
@@ -880,8 +880,14 @@
 					//	Collect a poof
 					poof = this.findFoodPoofAt(FlxG.mouse.x, FlxG.mouse.y);
 					
-					if (poof != null && poof.ownerChain == null)
+					if (poof != null && poof.ownerChain == null && poof.isReady)
 					{
+						if (poof.ownerCube != null)
+						{
+							FlxG.log("Snagged a poof in-eateio");
+							poof.ownerCube.relinquishFood();
+						}
+						
 						poof.randomizeColor();
 						this.pipettePoof = poof;
 						poof.active = poof.visible = false;
@@ -981,6 +987,7 @@
 		
 		public function spawnFoodPoof() : void
 		{
+			var i : int;
 			var x : int;
 			var y : int;
 			var poof : FoodPoof;
@@ -1016,9 +1023,11 @@
 			p = this.getRandomPointInsideDish();
 			pb = new FlxPoint(p.x, p.y);
 			
+			i = 0;
+			
 			do {
 				poof = this.getFoodPoof();
-				poof.spawn(pb.x, pb.y, color);
+				poof.spawn(pb.x, pb.y, color, i * 0.4);
 				
 				do
 				{
@@ -1030,6 +1039,8 @@
 					!this.isPointInsideDish(pb.x, pb.y) ||
 					this.pointOverlapsFood(pb)
 				);
+				
+				i++;
 			} while (poofCount-- > 0);
 		}
 		
@@ -1138,6 +1149,7 @@
 					poof == null ||
 					(colorId >= 0 && poof.colorId != colorId) ||
 					!poof.exists ||
+					!poof.isReady ||
 					(mustBeAvailable && poof.ownerCube != null)
 				)
 				{

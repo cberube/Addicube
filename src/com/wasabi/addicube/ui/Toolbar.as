@@ -2,6 +2,7 @@ package com.wasabi.addicube.ui
 {
 	import com.wasabi.addicube.Main;
 	import com.wasabi.addicube.states.PlayingState;
+	import org.flixel.data.FlxPanel;
 	import org.flixel.FlxG;
 	import org.flixel.FlxGroup;
 	import org.flixel.FlxPoint;
@@ -43,6 +44,8 @@ package com.wasabi.addicube.ui
 		private var backgroundSprite : FlxSprite;
 		private var buttons : Array;
 		
+		private var pauseButton : FlxSprite;
+		
 		public function Toolbar() 
 		{
 			var i : int;
@@ -78,6 +81,10 @@ package com.wasabi.addicube.ui
 			x += ToolbarButton.WIDTH + this.buttonSpacing;
 			
 			for (i = 0; i < this.buttons.length; i++) this.add(this.buttons[i], true); 
+			
+			this.pauseButton = new FlxSprite(10, 2);
+			this.pauseButton.createGraphic(80, 25, 0x66FFFF00);
+			this.add(this.pauseButton, true);
 		}
 		
 		private function buttonPressed(arg : Object) : void
@@ -122,6 +129,13 @@ package com.wasabi.addicube.ui
 		override public function update():void 
 		{
 			super.update();
+			
+			if (
+				FlxG.mouse.justPressed() &&
+				this.pauseButton.overlapsPointScreenspace(FlxG.mouse.screenX, FlxG.mouse.screenY))
+			{
+				FlxG.pause = true;
+			}
 			
 			if (Main.DEBUG)
 			{

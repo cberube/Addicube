@@ -19,10 +19,13 @@ package com.wasabi.addicube.utility
 		
 		public var url : String;
 		
+		public var hasBeenClicked : Boolean;
+		
 		public function FadeSprite(x : int, y : int, gfx : Class) 
 		{
 			super(x, y, gfx);
 			this.url = null;
+			this.hasBeenClicked = false;
 		}
 		
 		public function start(si : Number, s : Number, so : Number, h : Number) : void
