@@ -176,6 +176,8 @@ package org.flixel
 		 */
 		static public var fade:FlxFade;
 		
+		static public var justPaused:Boolean;
+		
 		/**
 		 * Log data to the developer console.
 		 * 
@@ -206,6 +208,7 @@ package org.flixel
 			{
 				if(_pause)
 				{
+					FlxG.justPaused = true;
 					_game.pauseGame();
 					pauseSounds();
 				}

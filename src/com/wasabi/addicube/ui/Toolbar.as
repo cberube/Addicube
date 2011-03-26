@@ -83,7 +83,7 @@ package com.wasabi.addicube.ui
 			for (i = 0; i < this.buttons.length; i++) this.add(this.buttons[i], true); 
 			
 			this.pauseButton = new FlxSprite(10, 2);
-			this.pauseButton.createGraphic(80, 25, 0x66FFFF00);
+			this.pauseButton.createGraphic(80, 25, 0x00FFFF00);
 			this.add(this.pauseButton, true);
 		}
 		
@@ -157,6 +157,11 @@ package com.wasabi.addicube.ui
 		public function getButton(index : int) : ToolbarButton
 		{
 			return this.buttons[index];
+		}
+		
+		public function isOverPauseButton(x : int, y : int) : Boolean
+		{
+			return this.pauseButton.overlapsPointScreenspace(x, y);
 		}
 	}
 

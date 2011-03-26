@@ -278,6 +278,8 @@ package org.flixel
 			
 			var i:uint;
 			var soundPrefs:FlxSave;
+			
+			FlxG.justPaused = false;
 
 			//Frame timing
 			var ems:uint = mark-_total;
