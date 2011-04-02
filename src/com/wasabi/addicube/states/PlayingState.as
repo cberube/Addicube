@@ -14,6 +14,7 @@
 	import com.wasabi.addicube.objects.PetriDishDirt;
 	import com.wasabi.addicube.objects.PetriDishEdge;
 	import com.wasabi.addicube.objects.PetriDishRim;
+	import com.wasabi.addicube.sound.SoundTrack;
 	import com.wasabi.addicube.ui.Toolbar;
 	import com.wasabi.addicube.ui.TutorialArrow;
 	import com.wasabi.shared.ui.TextFrame;
@@ -147,6 +148,9 @@
 		
 		private var foodStack : Array;
 		
+		//	Sound handling
+		private var soundTrack : SoundTrack;
+		
 		public function PlayingState() 
 		{
 			
@@ -204,6 +208,9 @@
 			this.setupCamera();
 			
 			this.setupInitialGameSpace();
+			
+			this.soundTrack = SoundTrack.currentInstance;
+			this.add(this.soundTrack);
 		}
 		
 		private function setupTools() : void
