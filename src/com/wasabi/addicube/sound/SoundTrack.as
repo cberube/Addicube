@@ -13,11 +13,6 @@ package com.wasabi.addicube.sound
 	 */
 	public class SoundTrack extends FlxObject
 	{
-		//private static const WALK_A : Class;	
-		//private static const WALK_B : Class;
-		
-		private static const SOUNDSET_WALK : int = 0;
-		
 		private static var instance : SoundTrack;
 		
 		private var beatDelay : Number;
@@ -27,16 +22,47 @@ package com.wasabi.addicube.sound
 		
 		private var soundObjects : Object;
 		
-		private var soundSets : Object =
-		{
-			0: [ /*SoundTrack.WALK_A, SoundTrack.WALK_B*/ null, null ]
-		}
+		private var soundSets : Object;
+		
+		private var beatId : int;
 		
 		public function SoundTrack() 
 		{
 			this.beatQueue = new Array();
 			this.beatClock = 0;
 			this.beatDelay = 0.6 / 4.0;
+			this.beatId = 0;
+			
+			this.soundSets = { };
+			
+			var soundSet : SoundSet;
+			
+			soundSet = new SoundSet();
+			soundSet.bind(SoundSet.EVENT_WALK, Notes.N_4_0);
+			soundSet.bind(SoundSet.EVENT_WALK, Notes.N_4_1);
+			soundSet.bind(SoundSet.EVENT_WALK, Notes.N_4_2);
+			soundSet.bind(SoundSet.EVENT_WALK, Notes.N_4_3);
+			soundSet.bind(SoundSet.EVENT_WALK, Notes.N_4_4);
+			soundSet.bind(SoundSet.EVENT_WALK, Notes.N_4_5);
+			
+			soundSet.bind(SoundSet.EVENT_CHEW, Notes.N_16_0);
+			soundSet.bind(SoundSet.EVENT_CHEW, Notes.N_16_1);
+			soundSet.bind(SoundSet.EVENT_CHEW, Notes.N_16_2);
+			soundSet.bind(SoundSet.EVENT_CHEW, Notes.N_16_3);
+			soundSet.bind(SoundSet.EVENT_CHEW, Notes.N_16_4);
+			soundSet.bind(SoundSet.EVENT_CHEW, Notes.N_16_5);
+			
+			this.soundSets["balanced"] = soundSet;
+			
+			soundSet = new SoundSet();
+			soundSet.bind(SoundSet.EVENT_PROBE, Notes.N_1_0);
+			soundSet.bind(SoundSet.EVENT_PROBE, Notes.N_1_1);
+			soundSet.bind(SoundSet.EVENT_PROBE, Notes.N_1_2);
+			soundSet.bind(SoundSet.EVENT_PROBE, Notes.N_1_3);
+			soundSet.bind(SoundSet.EVENT_PROBE, Notes.N_1_4);
+			soundSet.bind(SoundSet.EVENT_PROBE, Notes.N_1_5);
+			
+			this.soundSets["neutral"] = soundSet;
 		}
 		
 		public static function get currentInstance() : SoundTrack
@@ -49,55 +75,56 @@ package com.wasabi.addicube.sound
 			return SoundTrack.instance;
 		}
 		
-		public function enqueueSound(setId : int) : void
+		public function enqueueSound(soundClass : Class) : void
 		{
-			this.beatQueue.push(setId);
+			this.beatQueue.push(soundClass);
+		}
+		
+		public function enqueueEventSound(setName : String, eventName : String, beatId : int = -1, beatMod : int = 0) : int
+		{
+			if (beatId >= 0 && beatId == this.beatId) return this.beatId;
+			if (beatMod > 0 && (this.beatId % beatMod) > 0) return -1;
+			
+			this.enqueueSound(this.soundSets[setName].getSoundForEvent(eventName));
+			
+			return this.beatId;
 		}
 		
 		override public function update():void 
 		{
 			this.beatClock -= FlxG.elapsed;
 			
+			/*if (this.beatQueue.length == 0)
+			{
+				var soundClass : Class;
+				
+				soundClass = this.soundSets["balanced"].getSoundForEvent(SoundSet.EVENT_WALK);
+				this.enqueueSound(soundClass);
+			}*/
+			
 			if (this.beatClock <= 0.0)
 			{
-				FlxG.log("Beat");
 				this.beatClock = this.beatDelay;
 				
 				while (this.beatQueue.length > 0)
 				{
-					this.playSoundFromSet(this.beatQueue.pop());
+					this.playSound(this.beatQueue.pop());
 				}
+				
+				this.beatId++;
+				if (this.beatId > 1000) this.beatId = 0;
 			}
 			
 			super.update();
 		}
 		
-		private function getSoundGroup(setId : int) : int
+		private function playSound(soundClass : Class) : void
 		{
-			if (this.soundObjects[setId] == null)
-			{
-				this.soundObjects[setId] = new FlxGroup();
-			}
-			
-			return this.soundObjects[setId];
-		}
-		
-		private function playSoundFromSet(setId : int) : int
-		{
-			var which : int;
-			var soundSet : Array;
-			var soundGroup : FlxGroup;
 			var sound : FlxSound;
 			
-			soundSet = this.soundSets[setId];
-			
-			which = FlxU.random() * soundSet.length;
-			
 			sound = new FlxSound();
-			sound.loadEmbedded(soundSet[which]);
+			sound.loadEmbedded(soundClass);
 			sound.play();
-			
-			return which;
 		}
 	}
 

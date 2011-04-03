@@ -5,6 +5,7 @@
 	import com.wasabi.addicube.data.CubeState;
 	import com.wasabi.addicube.data.Direction;
 	import com.wasabi.addicube.data.Disposition;
+	import com.wasabi.addicube.sound.SoundSet;
 	import com.wasabi.addicube.states.PlayingState;
 	import com.wasabi.addicube.Main;
 	import com.wasabi.addicube.Utility;
@@ -152,9 +153,15 @@
 		
 		public var followerCube : Cube;
 		
+		private var lastWalkBeatId : int;
+		private var lastChewingBeatId : int;
+		
 		public function Cube() 
 		{
 			this.createGraphic(2, 2, 0x00FF0000);
+			
+			this.lastWalkBeatId = -1;
+			this.lastChewingBeatId = -1;
 			
 			this.mopingClock = 0;
 			this.eatingClock = 0;
@@ -586,6 +593,10 @@
 			
 			if (this.currentState == CubeState.EATING_CHEW)
 			{
+				this.lastChewingBeatId = PlayingState.instance.currentSoundTrack.enqueueEventSound(
+					"balanced", SoundSet.EVENT_CHEW, this.lastChewingBeatId
+				);
+				
 				this.eatingClock += FlxG.elapsed;
 				
 				if (this.eatingClock >= Cube.CHEW_TIME && this.targetFoodPoof != null)
@@ -656,6 +667,10 @@
 		{
 			var toTarget : FlxPoint;
 			var distance : Number;
+			
+			this.lastWalkBeatId = PlayingState.instance.currentSoundTrack.enqueueEventSound(
+				"balanced", SoundSet.EVENT_WALK, this.lastWalkBeatId, 2
+			);
 			
 			if (this.currentAnimation == "StartWalk" && this.bodySprite.finished)
 			{

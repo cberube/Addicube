@@ -14,6 +14,7 @@
 	import com.wasabi.addicube.objects.PetriDishDirt;
 	import com.wasabi.addicube.objects.PetriDishEdge;
 	import com.wasabi.addicube.objects.PetriDishRim;
+	import com.wasabi.addicube.sound.SoundSet;
 	import com.wasabi.addicube.sound.SoundTrack;
 	import com.wasabi.addicube.ui.Toolbar;
 	import com.wasabi.addicube.ui.TutorialArrow;
@@ -704,6 +705,7 @@
 				
 			if (FlxG.mouse.justPressed())
 			{
+				this.currentSoundTrack.enqueueEventSound("neutral", SoundSet.EVENT_PROBE);
 				this.probeOrigin.x = FlxG.mouse.x;
 				this.probeOrigin.y = FlxG.mouse.y;
 			}
@@ -1488,6 +1490,11 @@
 		public function get currentTweezerChain() : FoodChain
 		{
 			return this.tweezerChain;
+		}
+		
+		public function get currentSoundTrack() : SoundTrack
+		{
+			return this.soundTrack;
 		}
 		
 	}
