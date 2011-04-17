@@ -52,6 +52,13 @@ package com.wasabi.addicube.sound
 			soundSet.bind(SoundSet.EVENT_CHEW, Notes.N_16_4);
 			soundSet.bind(SoundSet.EVENT_CHEW, Notes.N_16_5);
 			
+			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.N_1_0);
+			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.N_1_1);
+			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.N_1_2);
+			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.N_1_3);
+			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.N_1_4);
+			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.N_1_5);
+			
 			this.soundSets["balanced"] = soundSet;
 			
 			soundSet = new SoundSet();
@@ -125,6 +132,11 @@ package com.wasabi.addicube.sound
 			sound = new FlxSound();
 			sound.loadEmbedded(soundClass);
 			sound.play();
+		}
+		
+		public function get currentBeatId() : int
+		{
+			return this.beatId;
 		}
 	}
 

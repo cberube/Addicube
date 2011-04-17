@@ -24,6 +24,7 @@
 	import org.flixel.FlxObject;
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
+	import org.flixel.FlxText;
 	import org.flixel.FlxU;
 	
 	/**
@@ -152,6 +153,10 @@
 		//	Sound handling
 		private var soundTrack : SoundTrack;
 		
+		private var lastProbeBeat : int;
+		
+		private var debugNote : FlxText;
+		
 		public function PlayingState() 
 		{
 			
@@ -212,6 +217,12 @@
 			
 			this.soundTrack = SoundTrack.currentInstance;
 			this.add(this.soundTrack);
+			
+			this.lastProbeBeat = -1;
+			
+			this.debugNote = new FlxText(0, 20, FlxG.width);
+			this.debugNote.scrollFactor = new FlxPoint();
+			this.add(this.debugNote);
 		}
 		
 		private function setupTools() : void
@@ -345,7 +356,7 @@
 		 * Adds a new cube to the world; also sets up the base and body colliders for the cube
 		 * @param	cube	The cube to add
 		 */
-		public function addCube(cube : Cube) : void
+		public function addCube(cube : Cube, fromSplit : Boolean = false) : void
 		{
 			this.add(cube);
 			this.cubes.add(cube);
@@ -355,6 +366,7 @@
 			
 			this.liveCubes++;
 			this.foodNeeded += Cube.FOOD_TO_SPLIT;
+			if (fromSplit) this.foodNeeded += Cube.FOOD_TO_SPLIT;
 			
 			this.buildFoodStack();
 		}
@@ -595,6 +607,8 @@
 			
 			FlxU.overlap(this.cubeBodyColliders, this.cubeBodyColliders, this.handleCubeOverlap );
 			
+			this.debugNote.text = "Food stack: " + this.foodStack.length;
+			
 			//	Determine the maximum desired food poofs
 			if (!this.tutorial.tutorialIsRunning)
 			{
@@ -687,12 +701,28 @@
 				poof.spawn(FlxG.mouse.x, FlxG.mouse.y);
 			}
 			
-			if (FlxG.keys.justPressed("M"))
+			var cube : Cube;
+			
+			if
+			(
+				FlxG.keys.justPressed("R") ||
+				FlxG.keys.justPressed("G") ||
+				FlxG.keys.justPressed("B")
+			)
 			{
-				var cube : Cube;
+				this.cube = new Cube();
 				
-				cube = this.cubes.members[0];
-				cube.moveTo(FlxG.mouse.x, FlxG.mouse.y);
+				if (FlxG.keys.pressed("R")) this.cube.setDisposition(Disposition.RED);
+				else if (FlxG.keys.pressed("G")) this.cube.setDisposition(Disposition.GREEN);
+				else if (FlxG.keys.pressed("B")) this.cube.setDisposition(Disposition.BLUE);
+				
+				this.cube.setSize(Cube.SIZE_LARGE);
+				
+				this.addCube(this.cube);
+				this.cube.reset(
+					FlxG.mouse.x - this.cube.bodySprite.width / 2,
+					FlxG.mouse.y - this.cube.bodySprite.height / 2
+				);
 			}
 		}
 		
@@ -705,13 +735,19 @@
 				
 			if (FlxG.mouse.justPressed())
 			{
-				this.currentSoundTrack.enqueueEventSound("neutral", SoundSet.EVENT_PROBE);
 				this.probeOrigin.x = FlxG.mouse.x;
 				this.probeOrigin.y = FlxG.mouse.y;
+				
+				this.lastProbeBeat = this.currentSoundTrack.enqueueEventSound("neutral", SoundSet.EVENT_PROBE, this.lastProbeBeat, 2);
 			}
 			
 			if (FlxG.mouse.pressed())
 			{
+				if (!FlxG.mouse.justPressed())
+				{
+					this.lastProbeBeat = this.currentSoundTrack.enqueueEventSound("neutral", SoundSet.EVENT_PROBE, this.lastProbeBeat, 2);
+				}
+				
 				this.probeRadius +=
 					this.probeGrowthRate * FlxG.elapsed *
 					(

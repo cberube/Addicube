@@ -155,6 +155,7 @@
 		
 		private var lastWalkBeatId : int;
 		private var lastChewingBeatId : int;
+		private var lastHooverBeatId : int;
 		
 		public function Cube() 
 		{
@@ -162,6 +163,7 @@
 			
 			this.lastWalkBeatId = -1;
 			this.lastChewingBeatId = -1;
+			this.lastHooverBeatId = -1;
 			
 			this.mopingClock = 0;
 			this.eatingClock = 0;
@@ -267,7 +269,10 @@
 			
 			if (this.targetCube != null)
 			{
-				if (this.color != Disposition.GREEN)
+				if (
+					this.disposition != Disposition.GREEN &&
+					this.disposition != Disposition.RED
+				)
 				{
 					this.targetCube.setFollowerCube(null);
 					this.targetCube = null;
@@ -575,6 +580,10 @@
 			
 			if (this.currentState == CubeState.EATING_HOOVER)
 			{
+				this.lastHooverBeatId = PlayingState.instance.currentSoundTrack.enqueueEventSound(
+					"balanced", SoundSet.EVENT_HOOVER, this.lastHooverBeatId, 2
+				);
+				
 				this.eatingClock += FlxG.elapsed;
 				
 				p = this.eatingClock / Cube.HOOVER_TIME;
@@ -594,7 +603,7 @@
 			if (this.currentState == CubeState.EATING_CHEW)
 			{
 				this.lastChewingBeatId = PlayingState.instance.currentSoundTrack.enqueueEventSound(
-					"balanced", SoundSet.EVENT_CHEW, this.lastChewingBeatId
+					"balanced", SoundSet.EVENT_CHEW, this.lastChewingBeatId, 2
 				);
 				
 				this.eatingClock += FlxG.elapsed;
@@ -638,6 +647,8 @@
 			
 			this.updateMoving();
 			
+			//FlxG.log("headbutting: " + this.targetCube);
+			
 			if (this.targetCube != null)
 			{
 				if (this.bodyCollider.overlaps(this.targetCube.bodyCollider))
@@ -649,13 +660,35 @@
 						this.targetCube.y + 20 * this.dashDirection.y
 					);
 					
+					//FlxG.log("Hit target cube");
+					
 					if (!PlayingState.instance.isPointInsideDish(this.targetCube.center.x, this.targetCube.center.y))
 					{
 						this.targetCube.reset(previousPosition.x, previousPosition.y);
 					}
 					
+					//FlxG.log("dashdir: " + this.dashDirection);
+					var o : FlxPoint = new FlxPoint();
+					var d : Number;
+					var dds : FlxPoint = new FlxPoint();
+					
+					o.x = 6 * this.dashDirection.x;
+					o.y = 6 * this.dashDirection.y;
+					
+					//FlxG.log("Offset: " + o);
+					
+					d = 5 + this.bodyCollider.width / 2 + this.targetCube.bodyCollider.width / 2;
+					
+					dds.x = (this.dashDirection.x < 0 ? -1 : 1);
+					dds.y = (this.dashDirection.y < 0 ? -1 : 1);
+					
+					o.x = this.targetCube.center.x - d * (this.dashDirection.x);
+					o.y = this.targetCube.center.y - d * (this.dashDirection.y);
+					
+					this.center = o;
+					
 					this.currentState = CubeState.IDLE;
-					FlxG.log("Idle because of end-of-headbutting");
+					//FlxG.log("Idle because of end-of-headbutting");
 					
 					this.targetCube.stun();
 					this.targetCube = null;
@@ -669,7 +702,7 @@
 			var distance : Number;
 			
 			this.lastWalkBeatId = PlayingState.instance.currentSoundTrack.enqueueEventSound(
-				"balanced", SoundSet.EVENT_WALK, this.lastWalkBeatId, 2
+				"balanced", SoundSet.EVENT_WALK, this.lastWalkBeatId
 			);
 			
 			if (this.currentAnimation == "StartWalk" && this.bodySprite.finished)
@@ -703,9 +736,6 @@
 			else
 			{
 				toTarget = FlxPoint.normalizeWithDistance(toTarget, distance);
-				
-				//this.bodyCollider.velocity.x = toTarget.x * this.speed;
-				//this.bodyCollider.velocity.y = toTarget.y * this.speed;
 				
 				this.reset(
 					x + toTarget.x * FlxG.elapsed * this.speed,
@@ -764,11 +794,6 @@
 			{
 				this.speed = 100;
 			}
-			
-			/*for (var i : int = 0; i < this.spriteGroup.members.length; i++)
-			{
-				this.spriteGroup.members[i].color = Disposition.TINT_COLOR[this.disposition];
-			}*/
 		}
 		
 		//	=============================================================================
@@ -1064,7 +1089,7 @@
 				cube.reset(this.center.x + 60 - this.bodySprite.width / 2, this.y);
 				cube.setSize(Cube.SIZE_SMALL);
 				cube.setDisposition(this.disposition);
-				PlayingState.instance.addCube(cube);
+				PlayingState.instance.addCube(cube, true);
 				cube.switchAnimation("Idle");
 				cube.setDirection(Direction.SOUTH);
 				
@@ -1184,6 +1209,7 @@
 			cube = PlayingState.instance.getClosestCube(this.center, this, true);
 			
 			this.targetCube = cube;
+			//FlxG.log("Going to headbut: " + cube);
 			
 			if (this.targetCube != null)
 			{

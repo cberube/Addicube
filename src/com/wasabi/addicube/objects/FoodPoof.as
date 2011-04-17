@@ -134,9 +134,11 @@
 			else if (which <= 0.66) this.loadGraphic(FoodPoof.GFX_POOF_2);
 			else this.loadGraphic(FoodPoof.GFX_POOF_3);
 			
+			this.growthClock = 0;
 			this.delayClock = delay;
 			this.visible = false;
 			this.scale.x = this.scale.y = 0;
+			this.exists = true;
 			
 			if (this.delayClock == 0)
 			{
