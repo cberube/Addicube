@@ -80,6 +80,79 @@ package com.wasabi.addicube.sound
 		[Embed(source = '../../../../../assets/audio/notes/n32-5.mp3')]
 		public static const N_32_5 : Class;
 
+		[Embed(source = '../../../../../assets/audio/notes/b1-0.mp3')]
+		public static const B_1_0 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b2-0.mp3')]
+		public static const B_2_0 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b4-0.mp3')]
+		public static const B_4_0 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b8-0.mp3')]
+		public static const B_8_0 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b16-0.mp3')]
+		public static const B_16_0 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b32-0.mp3')]
+		public static const B_32_0 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b1-1.mp3')]
+		public static const B_1_1 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b2-1.mp3')]
+		public static const B_2_1 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b4-1.mp3')]
+		public static const B_4_1 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b8-1.mp3')]
+		public static const B_8_1 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b16-1.mp3')]
+		public static const B_16_1 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b32-1.mp3')]
+		public static const B_32_1 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b1-2.mp3')]
+		public static const B_1_2 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b2-2.mp3')]
+		public static const B_2_2 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b4-2.mp3')]
+		public static const B_4_2 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b8-2.mp3')]
+		public static const B_8_2 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b16-2.mp3')]
+		public static const B_16_2 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b32-2.mp3')]
+		public static const B_32_2 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b1-3.mp3')]
+		public static const B_1_3 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b2-3.mp3')]
+		public static const B_2_3 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b4-3.mp3')]
+		public static const B_4_3 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b8-3.mp3')]
+		public static const B_8_3 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b16-3.mp3')]
+		public static const B_16_3 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b32-3.mp3')]
+		public static const B_32_3 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b1-4.mp3')]
+		public static const B_1_4 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b2-4.mp3')]
+		public static const B_2_4 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b4-4.mp3')]
+		public static const B_4_4 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b8-4.mp3')]
+		public static const B_8_4 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b16-4.mp3')]
+		public static const B_16_4 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b32-4.mp3')]
+		public static const B_32_4 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b1-5.mp3')]
+		public static const B_1_5 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b2-5.mp3')]
+		public static const B_2_5 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b4-5.mp3')]
+		public static const B_4_5 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b8-5.mp3')]
+		public static const B_8_5 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b16-5.mp3')]
+		public static const B_16_5 : Class;
+		[Embed(source = '../../../../../assets/audio/notes/b32-5.mp3')]
+		public static const B_32_5 : Class;
+
 		public function Notes() 
 		{
 		}
