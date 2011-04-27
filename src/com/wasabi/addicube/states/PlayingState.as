@@ -365,10 +365,24 @@
 			this.cubeBodyColliders.add(cube.bodyCollider);
 			
 			this.liveCubes++;
-			this.foodNeeded += Cube.FOOD_TO_SPLIT;
-			if (fromSplit) this.foodNeeded += Cube.FOOD_TO_SPLIT;
+			//this.foodNeeded += Cube.FOOD_TO_SPLIT;
+			//if (fromSplit) this.foodNeeded += Cube.FOOD_TO_SPLIT;
 			
-			this.buildFoodStack();
+			if (this.liveCubes == 1)
+			{
+				//	The first cube is a special case
+				this.augmentFood(3);
+			}
+			else
+			{
+				this.augmentFood(Cube.FOOD_TO_GROW);
+				if (fromSplit) this.augmentFood(Cube.FOOD_TO_GROW);
+			}
+		}
+		
+		public function augmentFood(amount : int) : void
+		{
+			this.foodNeeded += amount;
 		}
 		
 		private function buildFoodStack() : void
@@ -382,15 +396,16 @@
 			var which : Number;
 			var oneThird : int;
 			
-			remaining = this.foodNeeded - this.foodPoofs.countLiving();
+			//remaining = this.foodNeeded - this.foodPoofs.countLiving();
+			remaining = this.foodNeeded;
 			
 			//	Account for the initial cube not starting at a small size
-			remaining -= (Cube.FOOD_TO_SPLIT - 3);
+			//remaining -= (Cube.FOOD_TO_SPLIT - 3);
 			
 			oneThird = FlxU.ceil(remaining / 3);
 			colorCount = new Array();
 			
-			if (remaining < 3) return;
+			//if (remaining < 3) return;
 			
 			colorCount[Disposition.RED] = 0;
 			colorCount[Disposition.GREEN] = 0;
@@ -420,6 +435,9 @@
 				colorRemaining = oneThird - colorCount[color];
 				
 				which = Math.min(which, colorRemaining);
+				which = Math.min(which, remaining);
+				
+				FlxG.log("r: " + remaining + " / w: " + which);
 				
 				colorCount[color] += which;
 				
@@ -431,9 +449,9 @@
 				//FlxG.log("cr: " + colorRemaining + " / " + which + " " + color);
 				
 				remaining -= which;
-				//FlxG.log("r: " + remaining);
+				this.foodNeeded -= which;
 				//return;
-			} while (remaining >= 3);
+			} while (remaining > 0);
 		}
 		
 		public function removeCube(cube : Cube) : void
@@ -559,6 +577,12 @@
 			//FlxU.collide(this.cubeBodyColliders, this.cubeBodyColliders);
 			super.update();
 			
+			//	Create the food stack, if necessary
+			if (this.foodNeeded > 0)
+			{
+				this.buildFoodStack();
+			}
+			
 			//	Update most cubes active
 			if (this.liveCubeCount > this.mostCubesActive)
 			{
@@ -607,7 +631,7 @@
 			
 			FlxU.overlap(this.cubeBodyColliders, this.cubeBodyColliders, this.handleCubeOverlap );
 			
-			this.debugNote.text = "Food stack: " + this.foodStack.length;
+			this.debugNote.text = "Food stack: " + this.foodStack.length + " / " + this.foodNeeded + " // " + this.foodPoofs.countLiving();
 			
 			//	Determine the maximum desired food poofs
 			if (!this.tutorial.tutorialIsRunning)
@@ -1052,6 +1076,8 @@
 				
 				poofCount = foodData["count"];
 				color = foodData["color"];
+				
+				FlxG.log("pc: " + poofCount);
 			}
 			else
 			{
@@ -1086,7 +1112,7 @@
 				);
 				
 				i++;
-			} while (poofCount-- > 0);
+			} while (--poofCount > 0);
 		}
 		
 		public function spawnFoodChain() : void 

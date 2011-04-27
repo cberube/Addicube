@@ -1056,11 +1056,13 @@
 			{
 				this.setSize(Cube.SIZE_MEDIUM);
 				this.modifyDisposition();
+				PlayingState.instance.augmentFood(Cube.FOOD_TO_GROW);
 			}
 			else if (this.currentSize == Cube.SIZE_MEDIUM && this.totalFoodConsumed >= Cube.FOOD_TO_GROW * 2)
 			{
 				this.setSize(Cube.SIZE_LARGE);
 				this.modifyDisposition();
+				PlayingState.instance.augmentFood(Cube.FOOD_TO_GROW);
 			}
 			else if (this.currentSize == Cube.SIZE_LARGE && this.totalFoodConsumed >= Cube.FOOD_TO_SPLIT)
 			{
