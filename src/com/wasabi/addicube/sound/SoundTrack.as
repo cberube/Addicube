@@ -38,26 +38,26 @@ package com.wasabi.addicube.sound
 			var soundSet : SoundSet;
 			
 			soundSet = new SoundSet();
-			soundSet.bind(SoundSet.EVENT_WALK, Notes.N_4_0);
-			soundSet.bind(SoundSet.EVENT_WALK, Notes.N_4_1);
-			soundSet.bind(SoundSet.EVENT_WALK, Notes.N_4_2);
-			soundSet.bind(SoundSet.EVENT_WALK, Notes.N_4_3);
-			soundSet.bind(SoundSet.EVENT_WALK, Notes.N_4_4);
-			soundSet.bind(SoundSet.EVENT_WALK, Notes.N_4_5);
+			soundSet.bind(SoundSet.EVENT_WALK, Notes.B_4_0);
+			soundSet.bind(SoundSet.EVENT_WALK, Notes.B_4_1);
+			soundSet.bind(SoundSet.EVENT_WALK, Notes.B_4_2);
+			soundSet.bind(SoundSet.EVENT_WALK, Notes.B_4_3);
+			soundSet.bind(SoundSet.EVENT_WALK, Notes.B_4_4);
+			soundSet.bind(SoundSet.EVENT_WALK, Notes.B_4_5);
 			
-			soundSet.bind(SoundSet.EVENT_CHEW, Notes.N_16_0);
-			soundSet.bind(SoundSet.EVENT_CHEW, Notes.N_16_1);
-			soundSet.bind(SoundSet.EVENT_CHEW, Notes.N_16_2);
-			soundSet.bind(SoundSet.EVENT_CHEW, Notes.N_16_3);
-			soundSet.bind(SoundSet.EVENT_CHEW, Notes.N_16_4);
-			soundSet.bind(SoundSet.EVENT_CHEW, Notes.N_16_5);
+			soundSet.bind(SoundSet.EVENT_CHEW, Notes.B_16_0);
+			soundSet.bind(SoundSet.EVENT_CHEW, Notes.B_16_1);
+			soundSet.bind(SoundSet.EVENT_CHEW, Notes.B_16_2);
+			soundSet.bind(SoundSet.EVENT_CHEW, Notes.B_16_3);
+			soundSet.bind(SoundSet.EVENT_CHEW, Notes.B_16_4);
+			soundSet.bind(SoundSet.EVENT_CHEW, Notes.B_16_5);
 			
-			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.N_1_0);
-			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.N_1_1);
-			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.N_1_2);
-			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.N_1_3);
-			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.N_1_4);
-			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.N_1_5);
+			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.B_1_0);
+			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.B_1_1);
+			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.B_1_2);
+			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.B_1_3);
+			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.B_1_4);
+			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.B_1_5);
 			
 			this.soundSets["balanced"] = soundSet;
 			
@@ -82,23 +82,25 @@ package com.wasabi.addicube.sound
 			return SoundTrack.instance;
 		}
 		
-		public function enqueueSound(soundClass : Class) : void
+		public function enqueueSound(soundClass : Class, panPosition : Number = 0.5) : void
 		{
-			this.beatQueue.push(soundClass);
+			this.beatQueue.push(new SoundQueue(soundClass, panPosition));
 		}
 		
-		public function enqueueEventSound(setName : String, eventName : String, beatId : int = -1, beatMod : int = 0) : int
+		public function enqueueEventSound(setName : String, eventName : String, panPosition : Number, beatId : int = -1, beatMod : int = 0) : int
 		{
 			if (beatId >= 0 && beatId == this.beatId) return this.beatId;
 			if (beatMod > 0 && (this.beatId % beatMod) > 0) return -1;
 			
-			this.enqueueSound(this.soundSets[setName].getSoundForEvent(eventName));
+			this.enqueueSound(this.soundSets[setName].getSoundForEvent(eventName), panPosition);
 			
 			return this.beatId;
 		}
 		
 		override public function update():void 
 		{
+			var queue : SoundQueue;
+			
 			this.beatClock -= FlxG.elapsed;
 			
 			/*if (this.beatQueue.length == 0)
@@ -115,7 +117,8 @@ package com.wasabi.addicube.sound
 				
 				while (this.beatQueue.length > 0)
 				{
-					this.playSound(this.beatQueue.pop());
+					queue = this.beatQueue.pop();
+					this.playSound(queue.soundClass, queue.panPosition);
 				}
 				
 				this.beatId++;
@@ -125,12 +128,13 @@ package com.wasabi.addicube.sound
 			super.update();
 		}
 		
-		private function playSound(soundClass : Class) : void
+		private function playSound(soundClass : Class, panPosition : Number) : void
 		{
 			var sound : FlxSound;
 			
 			sound = new FlxSound();
 			sound.loadEmbedded(soundClass);
+			sound.pan = (panPosition * 2.0) - 1.0;
 			sound.play();
 		}
 		

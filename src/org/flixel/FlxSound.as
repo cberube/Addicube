@@ -411,5 +411,10 @@ package org.flixel
 				artist = _sound.id3.artist;
 			_sound.removeEventListener(Event.ID3, gotID3);
 		}
+		
+		public function set pan(p : Number) : void
+		{
+			this._transform.pan = p;
+		}
 	}
 }

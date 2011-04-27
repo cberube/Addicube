@@ -580,9 +580,7 @@
 			
 			if (this.currentState == CubeState.EATING_HOOVER)
 			{
-				this.lastHooverBeatId = PlayingState.instance.currentSoundTrack.enqueueEventSound(
-					"balanced", SoundSet.EVENT_HOOVER, this.lastHooverBeatId, 2
-				);
+				this.lastHooverBeatId = this.enqueueSound(SoundSet.EVENT_HOOVER, this.lastHooverBeatId, 2);
 				
 				this.eatingClock += FlxG.elapsed;
 				
@@ -602,9 +600,7 @@
 			
 			if (this.currentState == CubeState.EATING_CHEW)
 			{
-				this.lastChewingBeatId = PlayingState.instance.currentSoundTrack.enqueueEventSound(
-					"balanced", SoundSet.EVENT_CHEW, this.lastChewingBeatId, 2
-				);
+				this.lastChewingBeatId = this.enqueueSound(SoundSet.EVENT_HOOVER, this.lastChewingBeatId, 2);
 				
 				this.eatingClock += FlxG.elapsed;
 				
@@ -701,9 +697,7 @@
 			var toTarget : FlxPoint;
 			var distance : Number;
 			
-			this.lastWalkBeatId = PlayingState.instance.currentSoundTrack.enqueueEventSound(
-				"balanced", SoundSet.EVENT_WALK, this.lastWalkBeatId
-			);
+			this.lastWalkBeatId = this.enqueueSound(SoundSet.EVENT_WALK, this.lastWalkBeatId);
 			
 			if (this.currentAnimation == "StartWalk" && this.bodySprite.finished)
 			{
@@ -1313,6 +1307,17 @@
 			}
 			
 			return p;
+		}
+		
+		private function enqueueSound(eventName : String, lastBeatId : int, beatMod : int = 0) : int
+		{
+			var pan : Number;
+			
+			pan = (this.center.x / PlayingState.instance.petriDish.right);
+			
+			return PlayingState.instance.currentSoundTrack.enqueueEventSound(
+				"balanced", eventName, pan, lastBeatId, beatMod
+			);
 		}
 	}
 	

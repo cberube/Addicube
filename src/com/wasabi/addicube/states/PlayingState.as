@@ -738,14 +738,14 @@
 				this.probeOrigin.x = FlxG.mouse.x;
 				this.probeOrigin.y = FlxG.mouse.y;
 				
-				this.lastProbeBeat = this.currentSoundTrack.enqueueEventSound("neutral", SoundSet.EVENT_PROBE, this.lastProbeBeat, 2);
+				this.lastProbeBeat = this.currentSoundTrack.enqueueEventSound("neutral", SoundSet.EVENT_PROBE, 0.5, this.lastProbeBeat, 2);
 			}
 			
 			if (FlxG.mouse.pressed())
 			{
 				if (!FlxG.mouse.justPressed())
 				{
-					this.lastProbeBeat = this.currentSoundTrack.enqueueEventSound("neutral", SoundSet.EVENT_PROBE, this.lastProbeBeat, 2);
+					this.lastProbeBeat = this.currentSoundTrack.enqueueEventSound("neutral", SoundSet.EVENT_PROBE, 0.5, this.lastProbeBeat, 2);
 				}
 				
 				this.probeRadius +=
