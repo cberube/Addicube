@@ -27,12 +27,12 @@ package com.wasabi.addicube.sound
 			this.soundmap[event].push(sound);
 		}
 		
-		public function getSoundForEvent(event : String) : Class
+		public function getSoundForEvent(event : String, pan : Number = 0.0) : SoundQueue
 		{
 			var which : int;
 			
 			which = FlxU.randomInRange(0, this.soundmap[event].length);
-			return this.soundmap[event][which];
+			return new SoundQueue(which, this.soundmap[event][which], pan);
 		}
 		
 	}

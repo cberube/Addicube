@@ -82,17 +82,12 @@ package com.wasabi.addicube.sound
 			return SoundTrack.instance;
 		}
 		
-		public function enqueueSound(soundClass : Class, panPosition : Number = 0.5) : void
-		{
-			this.beatQueue.push(new SoundQueue(soundClass, panPosition));
-		}
-		
 		public function enqueueEventSound(setName : String, eventName : String, panPosition : Number, beatId : int = -1, beatMod : int = 0) : int
 		{
 			if (beatId >= 0 && beatId == this.beatId) return this.beatId;
 			if (beatMod > 0 && (this.beatId % beatMod) > 0) return -1;
 			
-			this.enqueueSound(this.soundSets[setName].getSoundForEvent(eventName), panPosition);
+			this.beatQueue.push(this.soundSets[setName].getSoundForEvent(eventName, panPosition));
 			
 			return this.beatId;
 		}
@@ -114,6 +109,8 @@ package com.wasabi.addicube.sound
 			if (this.beatClock <= 0.0)
 			{
 				this.beatClock = this.beatDelay;
+				
+				SoundBuffer.currentInstance.beat(this.beatQueue);
 				
 				while (this.beatQueue.length > 0)
 				{

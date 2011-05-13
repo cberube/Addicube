@@ -7,6 +7,11 @@ package com.wasabi.addicube.sound
 	public class Notes
 	{
 		
+		public static const MASK_STYLE  : uint = 0x00000F00;
+		public static const MASK_LENGTH : uint = 0x000000F0;
+		public static const MASK_PITCH  : uint = 0x0000000F;
+		public static const MASK_NOTE   : uint = 0x00000FFF;
+		
 		[Embed(source = '../../../../../assets/audio/notes/n1-0.mp3')]
 		public static const N_1_0 : Class;
 		[Embed(source = '../../../../../assets/audio/notes/n2-0.mp3')]
