@@ -18,7 +18,9 @@ package com.wasabi.addicube.sound
 		private var beatDelay : Number;
 		private var beatClock : Number;
 		
-		private var beatQueue : Array;
+		private var leftQueue : Object;
+		private var rightQueue : Object;
+		private var centerQueue : Object;
 		
 		private var soundObjects : Object;
 		
@@ -28,7 +30,10 @@ package com.wasabi.addicube.sound
 		
 		public function SoundTrack() 
 		{
-			this.beatQueue = new Array();
+			this.leftQueue = new Object();
+			this.rightQueue = new Object();
+			this.centerQueue = new Object();
+			
 			this.beatClock = 0;
 			this.beatDelay = 0.6 / 4.0;
 			this.beatId = 0;
@@ -38,36 +43,36 @@ package com.wasabi.addicube.sound
 			var soundSet : SoundSet;
 			
 			soundSet = new SoundSet();
-			soundSet.bind(SoundSet.EVENT_WALK, Notes.B_4_0);
-			soundSet.bind(SoundSet.EVENT_WALK, Notes.B_4_1);
-			soundSet.bind(SoundSet.EVENT_WALK, Notes.B_4_2);
-			soundSet.bind(SoundSet.EVENT_WALK, Notes.B_4_3);
-			soundSet.bind(SoundSet.EVENT_WALK, Notes.B_4_4);
-			soundSet.bind(SoundSet.EVENT_WALK, Notes.B_4_5);
+			soundSet.bind(SoundSet.EVENT_WALK, Notes.noteId("b", 4, 0));
+			soundSet.bind(SoundSet.EVENT_WALK, Notes.noteId("b", 4, 1));
+			soundSet.bind(SoundSet.EVENT_WALK, Notes.noteId("b", 4, 2));
+			soundSet.bind(SoundSet.EVENT_WALK, Notes.noteId("b", 4, 3));
+			soundSet.bind(SoundSet.EVENT_WALK, Notes.noteId("b", 4, 4));
+			soundSet.bind(SoundSet.EVENT_WALK, Notes.noteId("b", 4, 5));
 			
-			soundSet.bind(SoundSet.EVENT_CHEW, Notes.B_16_0);
-			soundSet.bind(SoundSet.EVENT_CHEW, Notes.B_16_1);
-			soundSet.bind(SoundSet.EVENT_CHEW, Notes.B_16_2);
-			soundSet.bind(SoundSet.EVENT_CHEW, Notes.B_16_3);
-			soundSet.bind(SoundSet.EVENT_CHEW, Notes.B_16_4);
-			soundSet.bind(SoundSet.EVENT_CHEW, Notes.B_16_5);
+			soundSet.bind(SoundSet.EVENT_CHEW, Notes.noteId("b", 16, 0));
+			soundSet.bind(SoundSet.EVENT_CHEW, Notes.noteId("b", 16, 1));
+			soundSet.bind(SoundSet.EVENT_CHEW, Notes.noteId("b", 16, 2));
+			soundSet.bind(SoundSet.EVENT_CHEW, Notes.noteId("b", 16, 3));
+			soundSet.bind(SoundSet.EVENT_CHEW, Notes.noteId("b", 16, 4));
+			soundSet.bind(SoundSet.EVENT_CHEW, Notes.noteId("b", 16, 5));
 			
-			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.B_1_0);
-			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.B_1_1);
-			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.B_1_2);
-			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.B_1_3);
-			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.B_1_4);
-			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.B_1_5);
+			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.noteId("b", 1, 0));
+			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.noteId("b", 1, 1));
+			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.noteId("b", 1, 2));
+			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.noteId("b", 1, 3));
+			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.noteId("b", 1, 4));
+			soundSet.bind(SoundSet.EVENT_HOOVER, Notes.noteId("b", 1, 5));
 			
 			this.soundSets["balanced"] = soundSet;
 			
 			soundSet = new SoundSet();
-			soundSet.bind(SoundSet.EVENT_PROBE, Notes.N_1_0);
-			soundSet.bind(SoundSet.EVENT_PROBE, Notes.N_1_1);
-			soundSet.bind(SoundSet.EVENT_PROBE, Notes.N_1_2);
-			soundSet.bind(SoundSet.EVENT_PROBE, Notes.N_1_3);
-			soundSet.bind(SoundSet.EVENT_PROBE, Notes.N_1_4);
-			soundSet.bind(SoundSet.EVENT_PROBE, Notes.N_1_5);
+			soundSet.bind(SoundSet.EVENT_PROBE, Notes.noteId("b", 1, 0));
+			soundSet.bind(SoundSet.EVENT_PROBE, Notes.noteId("b", 1, 1));
+			soundSet.bind(SoundSet.EVENT_PROBE, Notes.noteId("b", 1, 2));
+			soundSet.bind(SoundSet.EVENT_PROBE, Notes.noteId("b", 1, 3));
+			soundSet.bind(SoundSet.EVENT_PROBE, Notes.noteId("b", 1, 4));
+			soundSet.bind(SoundSet.EVENT_PROBE, Notes.noteId("b", 1, 5));
 			
 			this.soundSets["neutral"] = soundSet;
 		}
@@ -87,7 +92,24 @@ package com.wasabi.addicube.sound
 			if (beatId >= 0 && beatId == this.beatId) return this.beatId;
 			if (beatMod > 0 && (this.beatId % beatMod) > 0) return -1;
 			
-			this.beatQueue.push(this.soundSets[setName].getSoundForEvent(eventName, panPosition));
+			//	Turn the panning position into a left / center / right
+			var queue : Object;
+			var soundId : int;
+			
+			if (panPosition <= 0.33) queue = this.leftQueue;
+			else if (panPosition >= 0.66) queue = this.rightQueue;
+			else queue = this.centerQueue;
+			
+			soundId = this.soundSets[setName].getSoundIdForEvent(eventName);
+			
+			if (queue[soundId] == null)
+			{
+				queue[soundId] = 0.0;
+			}
+			
+			queue[soundId] += 0.2;
+			
+			//this.beatQueue.push(this.soundSets[setName].getSoundForEvent(eventName, panPosition));
 			
 			return this.beatId;
 		}
@@ -110,12 +132,27 @@ package com.wasabi.addicube.sound
 			{
 				this.beatClock = this.beatDelay;
 				
-				SoundBuffer.currentInstance.beat(this.beatQueue);
+				//SoundBuffer.currentInstance.beat(this.beatQueue);
 				
+				/*
 				while (this.beatQueue.length > 0)
 				{
 					queue = this.beatQueue.pop();
 					this.playSound(queue.soundClass, queue.panPosition);
+				}
+				*/
+				
+				for (var soundIdL : * in this.leftQueue)
+				{
+					FlxG.log("Left " + soundIdL + ": " + this.leftQueue[soundIdL]);
+				}
+				for (var soundIdR : * in this.rightQueue)
+				{
+					FlxG.log("Right " + soundIdR + ": " + this.rightQueue[soundIdR]);
+				}
+				for (var soundIdC : * in this.centerQueue)
+				{
+					FlxG.log("Center " + soundIdC + ": " + this.centerQueue[soundIdC]);
 				}
 				
 				this.beatId++;

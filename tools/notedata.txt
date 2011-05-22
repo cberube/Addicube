@@ -1,25 +1,3 @@
-package com.wasabi.addicube.sound 
-{
-	import org.flixel.FlxG;
-	/**
-	 * ...
-	 * @author Charles Berube (The Wasabi Project)
-	 */
-	public class Notes
-	{
-		
-		public static const SHIFT_PITCH : uint = 0;
-		public static const SHIFT_LENGTH : uint = 3;
-		public static const SHIFT_GROUP : uint = 6;
-		public static const SHIFT_PAN : uint = 9;
-		public static const SHIFT_VOLUME : uint = 12;
-		
-		public static const MASK_PITCH  : uint = 0x7 << Notes.SHIFT_PITCH;
-		public static const MASK_LENGTH : uint = 0x7 << Notes.SHIFT_LENGTH;
-		public static const MASK_GROUP  : uint = 0x7 << Notes.SHIFT_GROUP;
-		public static const MASK_PAN	: uint = 0x7 << Notes.SHIFT_PAN;
-		public static const MASK_VOLUME : uint = 0xF << Notes.SHIFT_VOLUME;
-		
 		[Embed(source = '../../../../../assets/audio/notes/n1-0.mp3')]
 		public static const A_1_0 : Class;
 
@@ -506,7 +484,6 @@ package com.wasabi.addicube.sound
 		[Embed(source = '../../../../../assets/audio/notes/t4-5.mp3')]
 		public static const T_4_5 : Class;
 
-		/*
 		[Embed(source = '../../../../../assets/audio/notes/t8-0.mp3')]
 		public static const T_8_0 : Class;
 
@@ -560,9 +537,8 @@ package com.wasabi.addicube.sound
 
 		[Embed(source = '../../../../../assets/audio/notes/t32-5.mp3')]
 		public static const T_32_5 : Class;
-		*/
 
-		public static var soundMap : Object = {
+		private var soundMap : Object = {
 			"0": A_1_0,
 			"1": A_1_1,
 			"2": A_1_2,
@@ -724,8 +700,7 @@ package com.wasabi.addicube.sound
 			"274": T_4_2,
 			"275": T_4_3,
 			"276": T_4_4,
-			"277": T_4_5
-			/*
+			"277": T_4_5,
 			"280": T_8_0,
 			"281": T_8_1,
 			"282": T_8_2,
@@ -744,45 +719,4 @@ package com.wasabi.addicube.sound
 			"299": T_32_3,
 			"300": T_32_4,
 			"301": T_32_5
-			*/
 		};
-		
-		private static var noteGroupMap : Object =
-		{
-			"a": 0,
-			"b": 64,
-			"g": 128			
-		};
-		
-		private static var noteLengthMap : Object =
-		{
-			"1": 0,
-			"2": 1,
-			"4": 2,
-			"8": 3,
-			"16": 4,
-			"32": 5
-		}
-		
-		public function Notes() 
-		{
-		}
-		
-		public static function noteId(group : String, length : int, pitch : int) : int
-		{
-			var value : int = 0;
-			
-			value =
-				((Notes.noteGroupMap[group]) & Notes.MASK_GROUP) |
-				((Notes.noteLengthMap[length] << Notes.SHIFT_LENGTH) & Notes.MASK_LENGTH) |
-				((pitch << Notes.SHIFT_PITCH) & Notes.MASK_PITCH)
-			;
-			
-			FlxG.log("NG: " + group + " -> " + Notes.noteGroupMap[group]);
-			FlxG.log("Note: " + group + "-" + (length) + "-" + (pitch) + " => " + value);
-			
-			return value;
-		}
-	}
-
-}

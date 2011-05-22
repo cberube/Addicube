@@ -1,5 +1,6 @@
 package com.wasabi.addicube.sound 
 {
+	import org.flixel.FlxG;
 	import org.flixel.FlxU;
 	/**
 	 * ...
@@ -21,18 +22,34 @@ package com.wasabi.addicube.sound
 			this.soundmap = { };
 		}
 		
-		public function bind(event : String, sound : Class) : void
+		public function bind(event : String, soundId : int) : void
 		{
 			if (this.soundmap[event] == null) this.soundmap[event] = new Array();
-			this.soundmap[event].push(sound);
+			this.soundmap[event].push(soundId);
+		}
+		
+		public function getSoundIdForEvent(event : String) : int
+		{
+			var which : int;
+			var note : Class;
+			
+			which = FlxU.randomInRange(0, this.soundmap[event].length);
+			
+			which = this.soundmap[event][which];
+			return which;
 		}
 		
 		public function getSoundForEvent(event : String, pan : Number = 0.0) : SoundQueue
 		{
 			var which : int;
+			var note : Class;
 			
 			which = FlxU.randomInRange(0, this.soundmap[event].length);
-			return new SoundQueue(which, this.soundmap[event][which], pan);
+			
+			which = this.soundmap[event][which];
+			note = Notes.soundMap[which];
+			
+			return new SoundQueue(which, note, pan);
 		}
 		
 	}
