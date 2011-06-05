@@ -750,6 +750,18 @@
 			}
 		}
 		
+		public function getPanningOffset(x : int) : Number
+		{
+			var center : int = -FlxG.scroll.x + FlxG.width / 2;
+			var halfCenterWidth : Number = (FlxG.width / 3);
+			
+			//	FlxG.log("X: " + x + " / sx: " + FlxG.scroll.x + " / cent: " + center);
+			
+			if (x < center - halfCenterWidth) return 0;
+			else if (x > center + halfCenterWidth) return 1;
+			else return 0.5;
+		}
+		
 		/**
 		 * Handles regular updates for the probe tool
 		 */
@@ -762,14 +774,14 @@
 				this.probeOrigin.x = FlxG.mouse.x;
 				this.probeOrigin.y = FlxG.mouse.y;
 				
-				this.lastProbeBeat = this.currentSoundTrack.enqueueEventSound("neutral", SoundSet.EVENT_PROBE, 0.5, this.lastProbeBeat, 2);
+				this.lastProbeBeat = this.currentSoundTrack.enqueueEventSound("probe", SoundSet.EVENT_TOOL, this.getPanningOffset(this.probeOrigin.x), this.lastProbeBeat, 2);
 			}
 			
 			if (FlxG.mouse.pressed())
 			{
 				if (!FlxG.mouse.justPressed())
 				{
-					this.lastProbeBeat = this.currentSoundTrack.enqueueEventSound("neutral", SoundSet.EVENT_PROBE, 0.5, this.lastProbeBeat, 2);
+					this.lastProbeBeat = this.currentSoundTrack.enqueueEventSound("probe", SoundSet.EVENT_TOOL, this.getPanningOffset(this.probeOrigin.x), this.lastProbeBeat, 2);
 				}
 				
 				this.probeRadius +=
@@ -827,6 +839,8 @@
 			
 			if (FlxG.mouse.justPressed())
 			{
+				this.currentSoundTrack.enqueueEventSound("scalpel", SoundSet.EVENT_TOOL, this.getPanningOffset(FlxG.mouse.x));
+				
 				poof = this.findFoodPoofAt(FlxG.mouse.x, FlxG.mouse.y);
 				if (poof != null) FlxG.log("Poof under scalpel...");
 				
@@ -846,6 +860,8 @@
 			
 			if (FlxG.mouse.justPressed())
 			{
+				this.currentSoundTrack.enqueueEventSound("tweezer", SoundSet.EVENT_TOOL, this.getPanningOffset(FlxG.mouse.x));
+				
 				poof = this.findFoodPoofAt(FlxG.mouse.x, FlxG.mouse.y);
 				
 				if (poof != null)
@@ -944,6 +960,8 @@
 			
 			if (FlxG.mouse.justPressed())
 			{
+				this.currentSoundTrack.enqueueEventSound("pipette", SoundSet.EVENT_TOOL, this.getPanningOffset(FlxG.mouse.x));
+				
 				if (this.pipettePoof == null)
 				{
 					//	Collect a poof

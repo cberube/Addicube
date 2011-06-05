@@ -1313,12 +1313,17 @@
 		
 		private function enqueueSound(eventName : String, lastBeatId : int, beatMod : int = 0) : int
 		{
-			var pan : Number;
+			var setName : String;
 			
-			pan = (this.center.x / PlayingState.instance.petriDish.right);
+			if (this.currentDisposition == Disposition.RED) setName = "angred";
+			else if (this.currentDisposition == Disposition.BLUE) setName = "blue";
+			else if (this.currentDisposition == Disposition.GREEN) setName = "greenvious";
+			else setName = "balanced";
 			
 			return PlayingState.instance.currentSoundTrack.enqueueEventSound(
-				"balanced", eventName, pan, lastBeatId, beatMod
+				setName, eventName,
+				PlayingState.instance.getPanningOffset(this.center.x),
+				lastBeatId, beatMod
 			);
 		}
 	}

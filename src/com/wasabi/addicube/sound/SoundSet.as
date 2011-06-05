@@ -13,7 +13,7 @@ package com.wasabi.addicube.sound
 		public static const EVENT_HOOVER : String = "hoover";
 		public static const EVENT_CHEW : String = "chew";
 		
-		public static const EVENT_PROBE : String = "probe";
+		public static const EVENT_TOOL : String = "tool";
 		
 		private var soundmap : Object;
 		
