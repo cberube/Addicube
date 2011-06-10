@@ -242,8 +242,6 @@ package com.wasabi.addicube.sound
 			{
 				this.beatClock = this.beatDelay;
 				
-				//SoundBuffer.currentInstance.beat(this.beatQueue);
-				
 				/*
 				while (this.beatQueue.length > 0)
 				{
@@ -257,18 +255,20 @@ package com.wasabi.addicube.sound
 				for (soundId in this.leftQueue)
 				{
 					//FlxG.log("Left " + soundIdL + ": " + this.leftQueue[soundIdL]);
-					this.playSound(Notes.soundMap[soundId], 0.0, this.leftQueue[soundId]);
+					this.playSound(soundId, Notes.soundMap[soundId], 0.0, this.leftQueue[soundId]);
 				}
 				for (soundId in this.rightQueue)
 				{
 					//FlxG.log("Right " + soundId + ": " + this.rightQueue[soundId]);
-					this.playSound(Notes.soundMap[soundId], 1.0, this.rightQueue[soundId]);
+					this.playSound(soundId, Notes.soundMap[soundId], 1.0, this.rightQueue[soundId]);
 				}
 				for (soundId in this.centerQueue)
 				{
 					//FlxG.log("Center " + soundId + ": " + this.centerQueue[soundId]);
-					this.playSound(Notes.soundMap[soundId], 0.5, this.centerQueue[soundId]);
+					this.playSound(soundId, Notes.soundMap[soundId], 0.5, this.centerQueue[soundId]);
 				}
+				
+				SoundBuffer.currentInstance.beat();
 				
 				this.leftQueue = { };
 				this.rightQueue = { };
@@ -281,7 +281,7 @@ package com.wasabi.addicube.sound
 			super.update();
 		}
 		
-		private function playSound(soundClass : Class, panPosition : Number, volume : Number) : void
+		private function playSound(soundId : int, soundClass : Class, panPosition : Number, volume : Number) : void
 		{
 			var sound : FlxSound;
 			
@@ -290,6 +290,8 @@ package com.wasabi.addicube.sound
 			sound.pan = (panPosition * 2.0) - 1.0;
 			sound.volume = volume;
 			sound.play();
+			
+			SoundBuffer.currentInstance.addBeatData(soundId, panPosition, volume);
 		}
 		
 		public function get currentBeatId() : int

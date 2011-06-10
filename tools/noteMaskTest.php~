@@ -34,7 +34,7 @@ printf($format, $panMask);
 printf($format, $volumnMask);
 */
 
-$groups = array('a', 'b', 'g', 't');
+$groups = array('a', 'b', 'g', /*'t'*/);
 $lengths = array('1', '2', '4', '8', '16', '32');
 $pitches = array('0', '1', '2', '3', '4', '5');
 
@@ -42,41 +42,11 @@ $inits = array();
 
 foreach($groups as $g => $group)
 {
-	foreach($lengths as $l => $length)
-	{
-		foreach($pitches as $p => $pitch)
-		{	
-			$value =
-				($g << $groupShift & $groupMask) |
-				($l << $lengthShift & $lengthMask) |
-				($p << $pitchShift & $pitchMask)
-			;
-			
-			$fileName = $group . $length . '-' . $pitch . '.mp3';
-			$constName = strtoupper($group . '_' . $length . '_' . $pitch);
-			
-			//printf($valueFormat, $value, $name);
-			
-			//[Embed(source = '../../../../../assets/audio/notes/b32-5.mp3')]
-			//public static const B_32_5 : Class;
-			
-			$embed = "[Embed(source = '../../../../../assets/audio/notes/$fileName')]";
-			$const = "public static const $constName : Class;"; 
-			
-			$embeds[$embed] = $const;
-			$inits[] = "\t\t\t\"$value\": $constName";
-		}
-	}
+	$value =
+		($g << $groupShift & $groupMask)
+		//($l << $lengthShift & $lengthMask) |
+		//($p << $pitchShift & $pitchMask)
+	;
+	
+	echo "\t\t$group: $value," . PHP_EOL;
 }
-
-$initializer = implode(",\n", $inits);
-
-foreach($embeds as $e => $c)
-{
-	echo "\t\t$e\n";
-	echo "\t\t$c\n\n";
-}
-
-echo "\t\tprivate var soundMap = {\n";
-echo $initializer;
-echo "\n\t\t};";

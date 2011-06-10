@@ -12,13 +12,17 @@ package com.wasabi.addicube.sound
 		public static const SHIFT_LENGTH : uint = 3;
 		public static const SHIFT_GROUP : uint = 6;
 		public static const SHIFT_PAN : uint = 9;
-		public static const SHIFT_VOLUME : uint = 12;
+		public static const SHIFT_VOLUME : uint = 11;
+		public static const SHIFT_SILENCE : uint = 15;
 		
-		public static const MASK_PITCH  : uint = 0x7 << Notes.SHIFT_PITCH;
-		public static const MASK_LENGTH : uint = 0x7 << Notes.SHIFT_LENGTH;
-		public static const MASK_GROUP  : uint = 0x7 << Notes.SHIFT_GROUP;
-		public static const MASK_PAN	: uint = 0x7 << Notes.SHIFT_PAN;
-		public static const MASK_VOLUME : uint = 0xF << Notes.SHIFT_VOLUME;
+		public static const MASK_PITCH  		: uint = 0x7 << Notes.SHIFT_PITCH;
+		public static const MASK_LENGTH 		: uint = 0x7 << Notes.SHIFT_LENGTH;
+		public static const MASK_GROUP  		: uint = 0x7 << Notes.SHIFT_GROUP;
+		public static const MASK_PAN			: uint = 0x3 << Notes.SHIFT_PAN;
+		public static const MASK_VOLUME 		: uint = 0xF << Notes.SHIFT_VOLUME;
+		public static const MASK_SILENCE		: uint = 0x1 << Notes.SHIFT_SILENCE;
+		
+		public static const MASK_ALL_NOTE_DATA	: uint = SoundBuffer.MAX_EMPTY_COUNT;
 		
 		[Embed(source = '../../../../../assets/audio/notes/a1-0.mp3')]
 		public static const A_1_0 : Class;
