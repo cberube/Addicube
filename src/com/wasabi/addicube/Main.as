@@ -17,8 +17,8 @@
 	public class Main extends FlxGame 
 	{
 		
-		public static const VERSION : String = "Post-IGF Beta - 06/06/2011 - R1";
-		public static const SCREEN_WIDTH : int = 500;
+		public static const VERSION : String = "Post-IGF Beta - 06/30/2011 - R1";
+		public static const SCREEN_WIDTH : int = 1024; //500;
 		public static const SCREEN_HEIGHT : int = 400;
 		
 		public static const DEBUG : Boolean = true;

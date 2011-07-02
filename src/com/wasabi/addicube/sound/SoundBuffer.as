@@ -36,8 +36,8 @@ package com.wasabi.addicube.sound
 			this.songData = new ByteArray();
 			this.beatData = new Array();
 			
-			this.socket = new Socket();
-			this.socket.connect('127.0.0.1', 50000);
+			//this.socket = new Socket();
+			//this.socket.connect('127.0.0.1', 50000);
 		}
 		
 		public function addBeatData(note : int, pan : Number, volume : Number) : void
@@ -78,7 +78,7 @@ package com.wasabi.addicube.sound
 			}
 			
 			this.beatData = new Array();
-			this.socket.flush();
+			//this.socket.flush();
 		}
 		
 		private function storeEmptyBeats() : void
@@ -89,7 +89,7 @@ package com.wasabi.addicube.sound
 			
 			data = Notes.MASK_SILENCE | (this.emptyBeatCount & SoundBuffer.MAX_EMPTY_COUNT);
 			this.songData.writeShort(data);
-			this.socket.writeShort(data);
+			//this.socket.writeShort(data);
 			this.emptyBeatCount = 0;
 		}
 		
@@ -99,7 +99,7 @@ package com.wasabi.addicube.sound
 			
 			for (i = 0; i < this.beatData.length; i++)
 			{
-				this.socket.writeShort(this.beatData[i]);
+				//this.socket.writeShort(this.beatData[i]);
 			}
 		}
 		
